@@ -2,7 +2,6 @@ package model
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"math/rand"
 
@@ -86,7 +85,14 @@ func (m *Markov) Generate(length int) []notes.Note {
 	}
 
 	melody := []notes.Note{firstNote}
-
+	// generate the next note, based on the last note, using the probablity matrix
+	for i := 1; i < length; i++ {
+		nextNote, err := m.generateNextNote(melody[len(melody)-1])
+		if err != nil {
+			log.Fatalf("unable to generate next note: %q", err)
+		}
+		melody = append(melody, nextNote)
+	}
 	return melody
 }
 
@@ -99,8 +105,6 @@ func (m *Markov) generateFirstNote() (notes.Note, error) {
 	for i := 1; i < len(m.InitialProbabilites); i++ {
 		cumulativeProbablities[i] = cumulativeProbablities[i-1] + m.InitialProbabilites[i]
 	}
-
-	fmt.Printf("cumulative probablities are now: %v\n", cumulativeProbablities)
 
 	for i, val := range cumulativeProbablities {
 		if randomNumber < val {
@@ -117,6 +121,49 @@ func (m *Markov) generateFirstNote() (notes.Note, error) {
 		QuarterNoteDuration: 0,
 	}, errors.New("couldn't generate first note")
 
+}
+
+func (m *Markov) generateNextNote(n notes.Note) (notes.Note, error) {
+
+	// is there a possible next note?
+	if m.hasSubsequestState(m.stateIndexes[n]) {
+
+		randomNumber := rand.Float64()
+
+		cumulativeProbablities := make([]float64, len(m.InitialProbabilites))
+		cumulativeProbablities[0] = m.TransitionMatrix[m.stateIndexes[n]][0]
+		for i := 1; i < len(m.InitialProbabilites); i++ {
+			cumulativeProbablities[i] = cumulativeProbablities[i-1] + m.TransitionMatrix[m.stateIndexes[n]][i]
+		}
+
+		for i, val := range cumulativeProbablities {
+			if randomNumber < val {
+				for k, v := range m.stateIndexes {
+					if i == v {
+						return k, nil
+					}
+				}
+			}
+		}
+		return notes.Note{}, errors.New("unable to generateNextNote")
+
+	} else {
+		return m.generateFirstNote()
+
+	}
+}
+
+func (m *Markov) hasSubsequestState(currentState int) bool {
+
+	row := m.TransitionMatrix[currentState]
+	var total float64
+	for _, num := range row {
+		total += num
+	}
+	if total > 0 {
+		return true
+	}
+	return false
 }
 
 func New(states []notes.Note) (*Markov, error) {

@@ -1,18 +1,24 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"log"
-
 	model "github.com/guitarkeegan/markov-go/internal/markov"
 	notes "github.com/guitarkeegan/markov-go/internal/notation"
+	"log"
 )
+
+var DEFAULT_MELODY_LENGTH = 4
 
 func main() {
 
+	var melodyLength int
+	// get # of notes form user input
+	flag.IntVar(&melodyLength, "l", 4, "desired melody length to generate")
+	flag.Parse()
+
 	// create training data
 	trainingData := createTrainingData()
-	fmt.Println(trainingData)
 	// define a series of states
 	states := []notes.Note{
 		{PitchWithOctave: "C4", QuarterNoteDuration: 1},
@@ -38,5 +44,8 @@ func main() {
 	// train the model on the training data
 	mkv.Train(trainingData)
 	// generate the music
+	melody := mkv.Generate(melodyLength)
 	// visualize the music
+	// TODO: call out to lilypond
+	fmt.Printf("%v\n", melody)
 }

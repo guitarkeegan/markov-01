@@ -117,10 +117,43 @@ func TestGenerateFirstMelody(t *testing.T) {
 
 	mkv.Train(td)
 
-	generatedMelody := mkv.Generate(12)
+	generatedMelody := mkv.Generate(1)
 
 	if len(generatedMelody) != 1 {
 		t.Error("generate inital melody didn't work\n")
 	}
 	t.Logf("generated initial melody of %v\n", generatedMelody)
+}
+
+func TestGenerate(t *testing.T) {
+
+	var MELODY_LENGTH = 4
+
+	states := []notes.Note{
+		{PitchWithOctave: "E4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "D4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "C4", QuarterNoteDuration: 1},
+	}
+
+	mkv, err := New(states)
+	if err != nil {
+		t.Errorf("error on model creation: %q", err.Error())
+	}
+
+	td := []notes.Note{
+		{PitchWithOctave: "E4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "E4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "D4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "C4", QuarterNoteDuration: 1},
+	}
+
+	mkv.Train(td)
+
+	generatedMelody := mkv.Generate(MELODY_LENGTH)
+
+	if len(generatedMelody) != MELODY_LENGTH {
+		t.Errorf("generated melody length not equal to requested length. want: %d, got: %d", MELODY_LENGTH, len(generatedMelody))
+	}
+
+	t.Logf("generated melody: %+v\n", generatedMelody)
 }
