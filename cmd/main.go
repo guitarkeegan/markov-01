@@ -1,6 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+
+	model "github.com/guitarkeegan/markov-go/internal/markov"
+	notes "github.com/guitarkeegan/markov-go/internal/notation"
+)
 
 func main() {
 
@@ -8,25 +14,29 @@ func main() {
 	trainingData := createTrainingData()
 	fmt.Println(trainingData)
 	// define a series of states
-	states := []Note{
-		Note{"C4", 1},
-		Note{"D4", 1},
-		Note{"E4", 1},
-		Note{"F4", 1},
-		Note{"G4", 1},
-		Note{"A4", 1},
-		Note{"B4", 1},
-		Note{"C4", 2},
-		Note{"D4", 2},
-		Note{"E4", 2},
-		Note{"F4", 2},
-		Note{"G4", 2},
-		Note{"A4", 2},
-		Note{"B4", 2},
+	states := []notes.Note{
+		{PitchWithOctave: "C4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "D4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "E4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "F4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "G4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "A4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "B4", QuarterNoteDuration: 1},
+		{PitchWithOctave: "C4", QuarterNoteDuration: 2},
+		{PitchWithOctave: "D4", QuarterNoteDuration: 2},
+		{PitchWithOctave: "E4", QuarterNoteDuration: 2},
+		{PitchWithOctave: "F4", QuarterNoteDuration: 2},
+		{PitchWithOctave: "G4", QuarterNoteDuration: 2},
+		{PitchWithOctave: "A4", QuarterNoteDuration: 2},
+		{PitchWithOctave: "B4", QuarterNoteDuration: 2},
 	}
 	// initialize the markov model with states
-	mkv := markov.New(states)
+	mkv, err := model.New(states)
+	if err != nil {
+		log.Fatalf("unable to create model. reason: %q", err)
+	}
 	// train the model on the training data
+	mkv.Train(trainingData)
 	// generate the music
 	// visualize the music
 }
