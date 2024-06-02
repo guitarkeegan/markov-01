@@ -3,9 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
+
+	"github.com/guitarkeegan/markov-go/internal/lilypond"
 	model "github.com/guitarkeegan/markov-go/internal/markov"
 	notes "github.com/guitarkeegan/markov-go/internal/notation"
-	"log"
 )
 
 var DEFAULT_MELODY_LENGTH = 4
@@ -47,5 +49,8 @@ func main() {
 	melody := mkv.Generate(melodyLength)
 	// visualize the music
 	// TODO: call out to lilypond
+	lp := lilypond.New("K's title", "Keegan", melody)
+	lp.DisplayScore()
+
 	fmt.Printf("%v\n", melody)
 }

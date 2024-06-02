@@ -3,7 +3,7 @@ package main
 import notes "github.com/guitarkeegan/markov-go/internal/notation"
 
 func createTrainingData() []notes.Note {
-
+	// St. Thomas in quarter notes
 	return []notes.Note{
 		{
 			PitchWithOctave:     "G4",
@@ -30,11 +30,19 @@ func createTrainingData() []notes.Note {
 			QuarterNoteDuration: 1,
 		},
 		{
-			PitchWithOctave:     "B4",
+			PitchWithOctave:     "E4",
 			QuarterNoteDuration: 1,
 		},
 		{
-			PitchWithOctave:     "D5",
+			PitchWithOctave:     "F5",
+			QuarterNoteDuration: 1,
+		},
+		{
+			PitchWithOctave:     "G4",
+			QuarterNoteDuration: 1,
+		},
+		{
+			PitchWithOctave:     "C5",
 			QuarterNoteDuration: 1,
 		},
 		{
@@ -43,7 +51,7 @@ func createTrainingData() []notes.Note {
 		},
 		{
 			PitchWithOctave:     "C5",
-			QuarterNoteDuration: 2,
+			QuarterNoteDuration: 1,
 		},
 	}
 }
