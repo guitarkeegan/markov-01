@@ -17,7 +17,7 @@ func TestConvertNoteToLilypond(t *testing.T) {
 
 	got := lp.convertNotesToLilypond()
 
-	want := "C4 E4"
+	want := "c4 e4"
 
 	if got != want {
 		t.Errorf("conversion to lilypond string no good, WANT: %s\nGOT: %s", want, got)

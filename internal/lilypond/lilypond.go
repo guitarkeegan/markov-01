@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 	"text/template"
 
@@ -30,7 +31,7 @@ func New(title, composer string, notes []notes.Note) *Lilypond {
 }
 
 func (lp *Lilypond) writeScoreToFile() {
-	os.WriteFile("score.ly", []byte(lp.Score), 0666)
+	os.WriteFile("tmp_scores/score.ly", []byte(lp.Score), 0666)
 }
 
 func (lp *Lilypond) DisplayScore() error {
@@ -38,8 +39,8 @@ func (lp *Lilypond) DisplayScore() error {
 	lp.LilypondMelody = lp.convertNotesToLilypond()
 	scoreTemplate, err := template.New("score").Parse(`\version "2.24.3"
 \header {
-  title = "{{.Composer}}"
-  composer = "{{.Title}}"
+  title = "{{.Title}}"
+  composer = "{{.Composer}}"
 }
 
 \score {
@@ -67,6 +68,16 @@ func (lp *Lilypond) DisplayScore() error {
 
 	lp.writeScoreToFile()
 
+	// TODO: better way to get path?
+	cmd := exec.Command("lilypond", "-fpng", "-o", "output", "tmp_scores/score.ly")
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return errors.New("call to lilypond failed: " + err.Error())
+	}
+
+	fmt.Printf("%s", output)
+
 	return nil
 
 }
@@ -78,7 +89,7 @@ func (lp *Lilypond) convertNotesToLilypond() string {
 	for _, note := range lp.Notes {
 		// TODO: Ignoring octave for now
 		// TODO: also the string is gross
-		newString := fmt.Sprintf("%s%d", string(note.PitchWithOctave[0]), convertDuration(note.QuarterNoteDuration))
+		newString := fmt.Sprintf("%s%d", strings.ToLower(string(note.PitchWithOctave[0])), convertDuration(note.QuarterNoteDuration))
 		lilypondMelody = append(lilypondMelody, newString)
 	}
 	return strings.Join(lilypondMelody, " ")

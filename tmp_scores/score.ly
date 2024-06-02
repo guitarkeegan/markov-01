@@ -1,7 +1,7 @@
 \version "2.24.3"
 \header {
-  title = "Keegan"
-  composer = "K's title"
+  title = "K's title"
+  composer = "Keegan"
 }
 
 \score {
@@ -10,7 +10,7 @@
       \time 4/4
       \key c \major
 
-	C4 G4 A4 E4
+	b4 a4 g4 c4 b4 a4 e4 c4 b4 c4 g4 a4 g4 c4 b4 c4
     }
   }
 }

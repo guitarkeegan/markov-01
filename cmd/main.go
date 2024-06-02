@@ -50,7 +50,10 @@ func main() {
 	// visualize the music
 	// TODO: call out to lilypond
 	lp := lilypond.New("K's title", "Keegan", melody)
-	lp.DisplayScore()
+	err = lp.DisplayScore()
+	if err != nil {
+		fmt.Printf("error on display score: %s\n", err)
+	}
 
 	fmt.Printf("%v\n", melody)
 }
