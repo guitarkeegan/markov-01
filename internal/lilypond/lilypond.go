@@ -40,12 +40,12 @@ func (lp *Lilypond) DisplayScore() error {
 	scoreTemplate, err := template.New("score").Parse(`\version "2.24.3"
 \header {
   title = "{{.Title}}"
-  composer = "{{.Composer}}"
+  composer = "{{.Title}}"
 }
 
 \score {
   \new Staff {
-    \relative c' {
+     {
       \time 4/4
       \key c \major
 
@@ -89,7 +89,7 @@ func (lp *Lilypond) convertNotesToLilypond() string {
 	for _, note := range lp.Notes {
 		// TODO: Ignoring octave for now
 		// TODO: also the string is gross
-		newString := fmt.Sprintf("%s%d", strings.ToLower(string(note.PitchWithOctave[0])), convertDuration(note.QuarterNoteDuration))
+		newString := fmt.Sprintf("%s'%d", strings.ToLower(string(note.PitchWithOctave[0])), convertDuration(note.QuarterNoteDuration))
 		lilypondMelody = append(lilypondMelody, newString)
 	}
 	return strings.Join(lilypondMelody, " ")
