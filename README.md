@@ -25,7 +25,6 @@ You can experiment with changing the training set in the cmd/training.go file.
 
 In no particular order
 
-- properly format octaves
 - update int to float on note durations
 - get user input for title and composer
 

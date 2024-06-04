@@ -69,7 +69,7 @@ func (lp *Lilypond) DisplayScore() error {
 	lp.writeScoreToFile()
 
 	// TODO: better way to get path?
-	cmd := exec.Command("lilypond", "-fpng", "-o", "output", "tmp_scores/score.ly")
+	cmd := exec.Command("lilypond", "-fpng", "-fmidi", "-o", "output", "tmp_scores/score.ly")
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
